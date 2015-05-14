@@ -1,5 +1,8 @@
 #!/bin/sh
 
+npm install
+bower install
+
 # clean and prepare public directory
 rm -rf public
 cp -r src public
