@@ -13,7 +13,14 @@ cp -r src public
   cd src
   find . -name '*.html' | cpio -pdvm ../public
   cd ..
-  rm -rf src/*.html src/**/*.html public/**/_*.html public/*.jade public/**/*.jade public/_partials" &
+  echo 'test'
+  rm -rf src/*.html \
+         src/**/*.html \
+         public/_*.html \
+         public/**/_*.html \
+         public/*.jade \
+         public/**/*.jade \
+         public/_partials" &
 
 # compile sass to css
 ./node_modules/.bin/node-sass \
