@@ -19,6 +19,12 @@ module.exports = function(grunt) {
         ]
       }
     },
+    bower_concat: {
+      main: {
+        dest: 'public/lib/build.js',
+        cssDest: 'public/lib/build.css'
+      }
+    },
     clean: ['public'],
     copy: {
       main: {
@@ -26,10 +32,23 @@ module.exports = function(grunt) {
           {
             expand: true,
             cwd: 'src/',
-            src: ['**'],
-            dest: 'public/'
+            src: [
+              '**',
+              '!**/*.jade',
+              '!**/*.scss',
+              '!**/*.js'
+            ],
+            dest: 'public/',
+            filter: 'isFile'
           }
         ]
+      }
+    },
+    cssmin: {
+      main: {
+        files: {
+          'public/lib/build.css': 'public/lib/build.css'
+        }
       }
     },
     jade: {
@@ -58,13 +77,26 @@ module.exports = function(grunt) {
           'public/css/main.css': 'src/_styles/main.scss'
         }
       }
+    },
+    uglify: {
+      main: {
+        files: {
+          'public/lib/build.js': 'public/lib/build.js'
+        }
+      }
     }
   });
 
   grunt.registerTask('default', []);
   grunt.registerTask('build', [
     'clean',
-    'copy'
+    'copy',
+    'jade',
+    'sass',
+    'babel',
+    'bower_concat',
+    'uglify',
+    'cssmin'
   ]);
 
 };
