@@ -4,11 +4,27 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    babel: {
+    autoprefixer: {
       main: {
+        options: ['>1% in US'],
+        src: 'public/css/main.css'
+      }
+    },
+    babel: {
+      dev: {
         options: {
           sourceMap: 'inline'
         },
+        files: [
+          {
+            expand: true,
+            cwd: 'src/',
+            src: ['**/*.js'],
+            dest: 'public/'
+          }
+        ]
+      },
+      prod: {
         files: [
           {
             expand: true,
@@ -26,6 +42,16 @@ module.exports = function(grunt) {
       }
     },
     clean: ['public'],
+    connect: {
+      main: {
+        options: {
+          port: 8080,
+          base: 'public/',
+          open: true,
+          livereload: true
+        }
+      }
+    },
     copy: {
       main: {
         files: [
@@ -52,7 +78,7 @@ module.exports = function(grunt) {
       }
     },
     jade: {
-      main: {
+      dev: {
         options: {
           pretty: true
         },
@@ -65,10 +91,29 @@ module.exports = function(grunt) {
             ext: '.html'
           }
         ]
+      },
+      prod: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/',
+            src: ['**/*.jade', '!**/_*.jade'],
+            dest: 'public/',
+            ext: '.html'
+          }
+        ]
       }
     },
     sass: {
-      main: {
+      prod: {
+        options: {
+          outputStyle: 'compressed'
+        },
+        files: {
+          'public/css/main.css': 'src/_styles/main.scss'
+        }
+      },
+      dev: {
         options: {
           sourceMap: true,
           sourceMapEmbed: true
@@ -79,11 +124,47 @@ module.exports = function(grunt) {
       }
     },
     uglify: {
-      main: {
+      bower: {
         files: {
           'public/lib/build.js': 'public/lib/build.js'
         }
+      },
+      main: {
+        files: [
+          {
+            expand: true,
+            cwd: 'public/',
+            src: ['**/*.js'],
+            dest: 'public/'
+          }
+        ]
       }
+    },
+    watch: {
+      livereload: {
+        options: {
+          livereload: true
+        },
+
+        files: [
+          'public/css/main.css',
+          'public/js/**/*.js',
+          'public/**/*.html'
+        ]
+      },
+      jade: {
+        files: ['src/**/*.jade'],
+        tasks: ['jade:dev']
+      },
+      sass: {
+        files: ['src/**/*.scss'],
+        tasks: ['sass:dev', 'autoprefixer']
+      },
+      js: {
+        files: ['src/js/**/*.js'],
+        tasks: ['babel:dev']
+      }
+
     }
   });
 
@@ -91,12 +172,28 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'clean',
     'copy',
-    'jade',
-    'sass',
-    'babel',
+    'babel:prod',
     'bower_concat',
+    'jade:prod',
+    'sass:prod',
+    'autoprefixer',
     'uglify',
     'cssmin'
+  ]);
+  grunt.registerTask('build-dev', [
+    'clean',
+    'copy',
+    'babel:dev',
+    'bower_concat',
+    'jade:dev',
+    'sass:dev',
+    'autoprefixer'
+  ]);
+
+  grunt.registerTask('serve', [
+    'build-dev',
+    'connect',
+    'watch'
   ]);
 
 };
