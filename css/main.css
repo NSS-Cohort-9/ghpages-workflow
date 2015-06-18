@@ -1,1 +1,1 @@
-h3{color:limegreen}header{color:red}footer{color:green}h1{color:purple}h1:hover{color:pink;transition:all 1s linear}h4{color:lightblue}
+h3{color:limegreen}header{color:red}footer{color:green}h1{color:purple}h1:hover{color:pink;-webkit-transition:all 1s linear;transition:all 1s linear}h4{color:lightblue}
