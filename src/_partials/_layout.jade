@@ -6,7 +6,8 @@ html(lang="en-US")
     meta(name="viewport", content="width=device-width, initial-scale=1")
     block title
       title My App
-    link(rel="stylesheet", href="lib/build.css")
+    // bower:css
+    // endbower
     link(rel="stylesheet", href="css/main.css")
   body
     include _header
@@ -15,5 +16,8 @@ html(lang="en-US")
       block content
 
       include _footer
-      script(src="lib/build.js")
+      // build:js lib/build.js
+      // bower:js
+      // endbower
+      // endbuild
       script(src="js/main.js")
